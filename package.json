@@ -6,7 +6,8 @@
   "scripts": {
     "start": "ts-node src/app.ts",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "seed": "ts-node src/scripts/seed.ts"
+    "seed": "ts-node src/scripts/seed.ts",
+    "dev": "nodemon src/app.ts"
   },
   "keywords": [],
   "author": "",

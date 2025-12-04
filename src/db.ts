@@ -32,4 +32,31 @@ export const initDb = () => {
     });
 };
 
+export const runQuery = (query: string, params: any[] = []): Promise<any> => {
+    return new Promise((resolve, reject) => {
+        db.run(query, params, function (err) {
+            if (err) reject(err);
+            else resolve(this);
+        });
+    });
+};
+
+export const getQuery = (query: string, params: any[] = []): Promise<any> => {
+    return new Promise((resolve, reject) => {
+        db.get(query, params, (err, row) => {
+            if (err) reject(err);
+            else resolve(row);
+        });
+    });
+};
+
+export const getAllQuery = (query: string, params: any[] = []): Promise<any> => {
+  return new Promise((resolve, reject) => {
+      db.all(query, params, (err, row) => {
+          if (err) reject(err);
+          else resolve(row);
+      });
+  });
+};
+
 export default db;

@@ -1,26 +1,8 @@
 import fs from 'fs';
 import path from 'path';
-import db, { initDb } from '../db';
+import db, { initDb, runQuery, getQuery } from '../db';
 
 const csvPath = path.resolve(__dirname, '../../data.csv');
-
-const runQuery = (query: string, params: any[] = []): Promise<any> => {
-    return new Promise((resolve, reject) => {
-        db.run(query, params, function (err) {
-            if (err) reject(err);
-            else resolve(this);
-        });
-    });
-};
-
-const getQuery = (query: string, params: any[] = []): Promise<any> => {
-    return new Promise((resolve, reject) => {
-        db.get(query, params, (err, row) => {
-            if (err) reject(err);
-            else resolve(row);
-        });
-    });
-};
 
 const seed = async () => {
     initDb();
@@ -39,7 +21,7 @@ const seed = async () => {
 
         if (!peopleMap.has(name)) {
             try {
-                await runQuery('INSERT OR IGNORE INTO people (name) VALUES (?)', [name]);
+                await runQuery('INSERT INTO people (name) VALUES (?)', [name]);
                 const row: any = await getQuery('SELECT id FROM people WHERE name = ?', [name]);
                 if (row) {
                     peopleMap.set(name, row.id);
