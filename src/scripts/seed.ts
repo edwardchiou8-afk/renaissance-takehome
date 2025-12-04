@@ -21,7 +21,7 @@ const seed = async () => {
 
         if (!peopleMap.has(name)) {
             try {
-                await runQuery('INSERT INTO people (name) VALUES (?)', [name]);
+                await runQuery('INSERT OR IGNORE INTO people (name) VALUES (?)', [name]);
                 const row: any = await getQuery('SELECT id FROM people WHERE name = ?', [name]);
                 if (row) {
                     peopleMap.set(name, row.id);
