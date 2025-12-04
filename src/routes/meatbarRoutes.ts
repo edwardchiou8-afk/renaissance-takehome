@@ -1,8 +1,9 @@
 import { Router } from "express";
-import { getPeople } from "../controllers/meatBarControllers";
+import { getPeople, getConsumptions } from "../controllers/meatBarControllers";
 
 const router = Router();
 
 router.get('/people', getPeople);
+router.get('/consumptions', getConsumptions);
 
 export default router;

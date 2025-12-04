@@ -9,3 +9,12 @@ export const getPeople = async (req: Request, res: Response) => {
     res.status(500).json({ error: "Failed to fetch people" });
   }
 };
+
+export const getConsumptions = async (req: Request, res: Response) => {
+  try {
+    const consumptions = await getAllQuery("SELECT * FROM meat_bars");
+    res.json(consumptions);
+  } catch (error) {
+    res.status(500).json({ error: "Failed to fetch consumptions" });
+  }
+};
