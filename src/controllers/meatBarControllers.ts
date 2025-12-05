@@ -93,3 +93,27 @@ export const getStreaks = async (req: Request, res: Response) => {
       res.status(500).json({ error: 'Failed to calculate streaks' });
   }
 };
+
+export const getMonthPeak = async (req: Request, res: Response) => {
+  try {
+      const dailyCounts = await getAllQuery(`
+        SELECT strftime('%Y-%m', eaten_at) as month, date(eaten_at) as day, count(*) as count 
+        FROM meat_bars 
+        GROUP BY day
+      `);
+
+      const monthPeaks: Record<string, { day: string; count: number }> = {};
+
+      for (const data of dailyCounts) {
+          const { month, day, count } = data;
+          if (!monthPeaks[month] || count > monthPeaks[month].count) {
+              monthPeaks[month] = { day, count };
+          }
+      }
+
+      res.json(monthPeaks);
+  } catch (err) {
+      console.error(err);
+      res.status(500).json({ error: 'Failed to calculate month peaks' });
+  }
+};

@@ -23,6 +23,14 @@ describe('Meat Bar API', () => {
     await runQuery('INSERT INTO meat_bars (person_id, type, eaten_at) VALUES (?, ?, ?)', [1, 'beef', '2023-01-03T12:00:00Z']);
 
     await runQuery('INSERT INTO meat_bars (person_id, type, eaten_at) VALUES (?, ?, ?)', [1, 'beef', '2023-01-04T10:00:00Z']);
+
+    await runQuery('INSERT INTO meat_bars (person_id, type, eaten_at) VALUES (?, ?, ?)', [1, 'beef', '2023-02-01T10:00:00Z']);
+
+    for (let i = 0; i < 5; i++) {
+        await runQuery('INSERT INTO meat_bars (person_id, type, eaten_at) VALUES (?, ?, ?)', [1, 'beef', '2023-02-05T10:00:00Z']);
+    }
+
+
   });
 
   describe('POST /api/meatbars/consumptions', () => {
@@ -71,5 +79,16 @@ describe('Meat Bar API', () => {
     expect(streak).toBeDefined();
     expect(streak.end).toBe('2023-01-03');
   });
+
+  it('GET /api/meatbars/month-peak should return correct peak for month', async () => {
+    const res = await request(app).get('/api/meatbars/month-peak');
+    expect(res.status).toBe(200);
+    const peaks = res.body;
+
+    expect(peaks['2023-02']).toBeDefined();
+    expect(peaks['2023-02'].day).toBe('2023-02-05');
+    expect(peaks['2023-02'].count).toBe(5);
+});
+
 
 });
