@@ -10,8 +10,19 @@ describe('Meat Bar API', () => {
     initDb();
 
     await new Promise(resolve => setTimeout(resolve, 100));
-    
+
     await runQuery('INSERT INTO people (id, name) VALUES (?, ?)', [1, 'Test Person']);
+
+    await runQuery('INSERT INTO meat_bars (person_id, type, eaten_at) VALUES (?, ?, ?)', [1, 'beef', '2023-01-01T10:00:00Z']);
+
+    await runQuery('INSERT INTO meat_bars (person_id, type, eaten_at) VALUES (?, ?, ?)', [1, 'beef', '2023-01-02T10:00:00Z']);
+    await runQuery('INSERT INTO meat_bars (person_id, type, eaten_at) VALUES (?, ?, ?)', [1, 'beef', '2023-01-02T11:00:00Z']);
+
+    await runQuery('INSERT INTO meat_bars (person_id, type, eaten_at) VALUES (?, ?, ?)', [1, 'beef', '2023-01-03T10:00:00Z']);
+    await runQuery('INSERT INTO meat_bars (person_id, type, eaten_at) VALUES (?, ?, ?)', [1, 'beef', '2023-01-03T11:00:00Z']);
+    await runQuery('INSERT INTO meat_bars (person_id, type, eaten_at) VALUES (?, ?, ?)', [1, 'beef', '2023-01-03T12:00:00Z']);
+
+    await runQuery('INSERT INTO meat_bars (person_id, type, eaten_at) VALUES (?, ?, ?)', [1, 'beef', '2023-01-04T10:00:00Z']);
   });
 
   describe('POST /api/meatbars/consumptions', () => {
@@ -49,4 +60,16 @@ describe('Meat Bar API', () => {
     });
 
   });
+
+  it('GET /api/meatbars/streaks should return correct streaks', async () => {
+    const res = await request(app).get('/api/meatbars/streaks');
+    expect(res.status).toBe(200);
+
+    const streaks = res.body;
+    expect(streaks.length).toBeGreaterThan(0);
+    const streak = streaks.find((s: any) => s.start === '2023-01-01');
+    expect(streak).toBeDefined();
+    expect(streak.end).toBe('2023-01-03');
+  });
+
 });
